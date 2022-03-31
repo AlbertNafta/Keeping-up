@@ -37,18 +37,6 @@ struct staff{
 	staff *pNext;
 };
 
-struct aSchoolYear{
-	struct semester{
-		string startDate;
-		string endDate;
-		struct courses{
-			string startDate;
-			string endDate;
-			string ID;
-		};
-	}Fall1,Summer2,Autumm3;
-}year1;
-
 void inputUserProfile(student *&pHead_s) // user = student
 {
 	student *pC = pHead_s;
@@ -69,7 +57,7 @@ void inputUserProfile(student *&pHead_s) // user = student
 			v = strtok(NULL, ",");
 			pC->gender=v; 
 			v = strtok(NULL, ",");
-			pC->birth;
+			pC->birth=v;
 			v = strtok(NULL, ",");
 			pC->social_ID=atoi(v);
 			v = strtok(NULL, ",");
@@ -143,15 +131,15 @@ fstream fout;
     // Read the input
     while(pC!=NULL) 
 	{
-		if(pC!=pHead_s)fout<<"";
-		if(pC->pNext==NULL)fout<<endl;
+		if(pC!=pHead_s)fout<<endl;
+	
         fout <<pC->userName<<","
 			<<pC->passWord<<","
 			<<pC->lastName<<","
 			<<pC->firstName<<","
 			<<pC->gender<<","
 			<<pC->birth<<","
-			<<pC->social_ID<<",";
+			<<pC->social_ID;
 	pC=pC->pNext;
 	}
 		
@@ -180,15 +168,14 @@ fstream fout;
 			<<pC->majors;
 	pC=pC->pNext;
 	}
-		
-		
-    
+	
 }
 
-int logIn(student *&pHead_s,staff *&pHead_t)
+void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role)
 {
 	string roles1;
 	string roles2;
+
 	int choose=0,granted=0;
 	
 	string userName;	
@@ -241,6 +228,7 @@ int logIn(student *&pHead_s,staff *&pHead_t)
 							cin>>passWord;
 					}
 					cout<<"Access granted !"<<endl;
+					*use=pT->userName;
 					granted=1;
 					break;
 				}
@@ -279,6 +267,7 @@ int logIn(student *&pHead_s,staff *&pHead_t)
 							cin>>passWord;
 					}
 					cout<<"Access granted !"<<endl;
+					*use=pS->userName;
 					granted=1;break;
 				}
 				}
@@ -384,10 +373,9 @@ int logIn(student *&pHead_s,staff *&pHead_t)
 			}
 		}
 	}while(granted!=1) ;
-	int role;
-	if(roles1.compare("teacher")==0){role=1;return pHead_t,role;}
-	if(roles1.compare("student")==0){role=0;return pHead_s,role;}
-	}
 
+	if(roles1.compare("teacher")==0){*role=1;}
+	if(roles1.compare("student")==0){*role=0;}
+	}
 
 
