@@ -16,6 +16,32 @@
 
 using namespace std;
 
+struct timeTable{
+	int week[4][7];//contain courses's ID
+};
+
+struct courses{
+			string name;
+			string teacher;
+			string startDate;
+			string endDate;
+			int numberStu;
+			int StuID[60];  //the course can contain 60students ! 
+			int ID;//course ID
+			int credits;
+			int nums;//nums of lessons
+
+			courses *jump; //pointer fo linked list
+};
+
+struct aSchoolYear{
+	struct semester{
+		string startDate;
+		string endDate;
+		int coursesID[30];// an array of courses's ID which will refer to -> struct courses
+		
+	}Fall1,Summer2,Autumm3;
+}year1;
 
 struct classes{
 	string className;
@@ -304,12 +330,206 @@ fstream fout;
     
 }
 
+void viewTeacherPro(staff *&pHead_t,string uses)
+{
+	staff *pT2=pHead_t;
+					while(pT2!=NULL)
+					{
+						if(pT2->userName.compare(uses)==0)
+						{
+							break;
+						}
+						pT2=pT2->pNext;
+					}
+	system("cls");
+	cout<<"Username: "<<pT2->userName<<endl;
+	cout<<"Password: "<<pT2->passWord<<endl;
+	cout<<"Real name: "<<pT2->name<<endl;
+	cout<<"Major: "<<pT2->majors;
+	cout<<"Age: "<<pT2->age<<endl;
+	cout<<endl<<"Do you want to change password ? (y/n)";
+	char change;
+	cin>>change;
+	if(change=='y'||change=='Y')
+	{
+		string pass;
+		cout<<"Type new password: ";
+		cin>>pass;
+		system("cls");
+		string pass2;
+		cout<<"Rewrite your password: ";
+		cin>>pass2;
+		while(pass2.compare(pass)!=0)
+		{
+			cout<<"Not match! Type again: ";
+			cin>>pass2;
+		}
+		pT2->passWord=pass;
+		cout<<"DONE !!!";
+		sleep(2);
+		system("cls");
+		OutputStaff(pHead_t);
+	}
+	cout<<"Press any to continue: ";
+	_getch();
+	
+}
 
-void MenuTeacher(staff *&pHead_t,staff *&pT,student *&pHead_s)
+void inputCourse(courses *&head,int &courseAllow)
+{
+		courses *pC=head;
+		int ok=1;
+	FILE *file = fopen("Courses.CSV", "r");
+	char content[1024];
+
+	while(fgets(content, 1024, file))
+	{
+			char *v = strtok(content, ",");
+			while(v and ok==1)
+			{
+			
+					if(ok==1)
+			{
+					cout<<"D";
+			courseAllow=atoi(v);
+			ok=0;	
+			}
+			v = strtok(NULL, ",");
+			}
+		while(v)
+		{			
+	
+			pC->name=v;
+			v = strtok(NULL, ",");
+			pC->teacher=v;
+			v = strtok(NULL, ",");
+			pC->startDate=v;
+			v = strtok(NULL, ",");
+			pC->endDate=v;
+			v = strtok(NULL, ",");
+			pC->numberStu=atoi(v);
+			v = strtok(NULL, ",");
+			for(int a=0;a<pC->numberStu;a++)
+			{
+				pC->StuID[a]=atoi(v);
+				v = strtok(NULL, ",");
+			}
+			pC->ID=atoi(v);
+			v = strtok(NULL, ",");
+			pC->credits=atoi(v);
+			v = strtok(NULL, ",");
+			pC->nums=atoi(v);
+			v = strtok(NULL, ",");
+					
+		}
+		pC->jump=new courses;
+		pC=pC->jump;
+	}
+	pC=head;
+	while(pC->jump->jump!=NULL)
+	{
+		pC=pC->jump;
+	}
+	courses *pDel=pC->jump;
+	pC->jump=NULL;
+	delete pDel;
+	fclose(file);
+}
+
+void viewCourses(courses *&head,student *&pHead_s)
+{
+	
+						courses *pc=head;
+						student *ps=pHead_s;
+						while(pc!=NULL)
+						{
+							cout<<"Name: "<<pc->name<<endl;
+							cout<<"Course ID: "<<pc->ID<<endl;
+							cout<<"Number of credits: "<<pc->credits<<endl;
+							cout<<"Taught by: "<<pc->teacher<<endl<<endl;
+							cout<<"Number of student: "<<pc->numberStu<<endl;
+							for(int z=0;z<pc->numberStu;z++)
+							{
+								cout<<z+1<<".|";
+								ps=pHead_s;
+								while(ps!=NULL)
+								{
+									if(ps->social_ID==pc->StuID[z])
+									{
+										break;
+									}
+									ps=ps->pNext;
+								}
+								cout<<pc->StuID[z]<<" | "<<ps->lastName<<endl;
+							}
+							pc=pc->jump;
+							cout<<"_____________________________"<<endl;
+						}
+						cout<<"Press any key to back..."<<endl;
+						_getch();
+}
+
+void outputCourse(courses *&head,int &courseAllow)
+{
+	fstream fout;
+  
+    // opens an existing csv file or creates a new file.
+    fout.open("Courses.CSV", ios::out );
+
+  	fout<<courseAllow<<endl;
+  	courses *pC=head;
+    // Read the input
+    while(pC!=NULL) 
+	{
+		if(pC!=head)fout<<endl;
+		
+        fout <<pC->name<<","
+			<<pC->teacher<<","
+			<<pC->startDate<<","
+			<<pC->endDate<<","
+			<<pC->numberStu<<",";
+		for(int a=0;a<pC->numberStu;a++)
+		{
+			fout<<pC->StuID[a];
+			fout<<",";
+		}
+			fout<<pC->ID<<","
+			<<pC->credits<<","
+			<<pC->nums;
+	pC=pC->jump;
+	}
+}
+
+
+void createCourse(courses *&head)
+{
+	courses *pC=head;
+	while(pC->jump!=NULL)pC=pC->jump;
+	pC->jump=new courses;
+	pC=pC->jump;
+	cout<<"Course name: ";
+	cin>>pC->name;
+	cout<<"Course ID: ";
+	cin>>pC->ID;
+	cout<<"Who will teach ? ";
+	cin>>pC->teacher;
+	cout<<"Number of lessons: ";
+	cin>>pC->nums;
+	cout<<"Number of credit: ";
+	cin>>pC->credits;
+	cout<<"StartDate: ";
+	cin>>pC->startDate;
+	cout<<"EndDate: ";
+	cin>>pC->endDate;
+	pC->numberStu=0;
+
+}
+
+void MenuTeacher(staff *&pHead_t,student *&pHead_s,string *use,classes *&pHead_c,courses *&head,int &courseAllow)
 {
 	int choose,choose2;
-	classes *pHead_c = new classes;
-	inputClasses(pHead_c);
+	string here=*use;
+
 	do{
 		cout<<"Press 1: Manage class"<<endl;
 		cout<<"Press 2: Manage courses"<<endl;
@@ -354,17 +574,54 @@ void MenuTeacher(staff *&pHead_t,staff *&pT,student *&pHead_s)
 						
 				}
 				}while(choose2!=4);system("cls");break;
-			
+			case 2:{
+				int choose3;
+				do{
+				system("cls");
+				cout<<"Press 1: Create courses"<<endl;
+				cout<<"Press 2: View course"<<endl;
+				cout<<"Press 3: ??? "<<endl;
+				cout<<"Press 4: Exit"<<endl;
+				cout<<"I choose: ";
+				cin>>choose3;
+				switch(choose3)
+				{
+					case 1:{
+						system("cls");
+						createCourse(head);
+						system("cls");
+						cout<<"DONE !!!";
+						sleep(1);
+						outputCourse(head,courseAllow);
+						system("cls");
+						break;
+					}
+						
+					case 2:{
+						system("cls");
+						viewCourses(head,pHead_s);
+						system("cls");
+						break;
+					}
+				}
+				}while(choose3!=4);
+				break;
+			}
 			case 3:{
 				creatSchoolYear();
 				system("cls");
 				break;
 			}
-				
+			
+			case 4:
+			{
+			viewTeacherPro(pHead_t,here);
+			system("cls");
+			break;	
+			}
 				
 		}
 	
 		
 	}while(choose!=5);
 }
-
