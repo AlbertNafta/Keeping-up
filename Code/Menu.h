@@ -390,7 +390,7 @@ void inputCourse(courses *&head,int &courseAllow)
 			
 					if(ok==1)
 			{
-					cout<<"D";
+
 			courseAllow=atoi(v);
 			ok=0;	
 			}
@@ -422,8 +422,13 @@ void inputCourse(courses *&head,int &courseAllow)
 			v = strtok(NULL, ",");
 					
 		}
+		if(ok==2)
+		{
 		pC->jump=new courses;
-		pC=pC->jump;
+		pC=pC->jump;	
+		}
+		ok=2;
+
 	}
 	pC=head;
 	while(pC->jump->jump!=NULL)
@@ -580,7 +585,7 @@ void MenuTeacher(staff *&pHead_t,student *&pHead_s,string *use,classes *&pHead_c
 				system("cls");
 				cout<<"Press 1: Create courses"<<endl;
 				cout<<"Press 2: View course"<<endl;
-				cout<<"Press 3: ??? "<<endl;
+				cout<<"Press 3: Course Registration "<<endl;
 				cout<<"Press 4: Exit"<<endl;
 				cout<<"I choose: ";
 				cin>>choose3;
@@ -603,8 +608,24 @@ void MenuTeacher(staff *&pHead_t,student *&pHead_s,string *use,classes *&pHead_c
 						system("cls");
 						break;
 					}
+					
+					case 3:{
+						system("cls");
+						char allow;
+						cout<<"Do you want to allow student to sign up courses ? (y/n) " ;
+						cin>>allow;
+						if(allow=='y'||allow=='Y')courseAllow=1;
+						if(allow=='n'||allow=='N')courseAllow=0;
+						outputCourse(head,courseAllow);
+						system("cls");
+						cout<<"OK...";
+						sleep(1);
+						system("cls");
+						break;
+					}
 				}
 				}while(choose3!=4);
+				system("cls");
 				break;
 			}
 			case 3:{
