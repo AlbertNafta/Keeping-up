@@ -37,7 +37,7 @@ void editClasses(classes *&pHead_c,student *&pHead_s);
 void inputClasses(classes *&pHead_c);
 void inputTeacherProfile(staff *&pHead_t);
 void inputUserProfile(student *&pHead_s) ;
-void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role);
+void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role,int &log);
 void MenuTeacher(staff *&pHead_t,student *&pHead_s,string *use,classes *&pHead_c,courses *&head,int &courseAllow);
 void outputClass(classes *&pHead_c);
 void OutputStaff(staff *&pHead_t);
@@ -66,22 +66,24 @@ int main()//this is just a test
 	inputClasses(pHead_c);
 	int courseAllow=-1;
 	inputCourse(head,courseAllow);
-	int roles=-1;
-	
+	int roles=-1,log=1;
 	string use;//to know who is login
-	logIn(pHead_s,pHead_t,&use,&roles);
+	do{
+	logIn(pHead_s,pHead_t,&use,&roles,log);
+	if(log==0)break;
 	if (roles==1)
 	{
 		MenuTeacher(pHead_t,pHead_s,&use,pHead_c,head,courseAllow);
 	}	
 	if(roles==0)
 	{
-	 menuStudent(pHead_c,pHead_s,&use,courseAllow,head);
-	
+		menuStudent(pHead_c,pHead_s,&use,courseAllow,head);
+		outputCourse(head,courseAllow);
 	}
-	outputCourse(head,courseAllow);
-//delete []pHead_s;
-//delete []pHead_t;
+	}while(log==1);
+delete []pHead_s;
+delete []pHead_t;
+delete[]head;
 	return 0;
 }
 
