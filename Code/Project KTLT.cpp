@@ -20,10 +20,10 @@
 using namespace std;
 
 struct score{
-	int midterm;
-	int final;
-	int progress;
-	int average;
+	string stuName;
+	int subject; //number of courses that student learn
+	int final[20][2];//contain courses's ID;
+			//contain final point
 };
 
 
