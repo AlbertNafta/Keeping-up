@@ -171,7 +171,7 @@ fstream fout;
 	
 }
 
-void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role)
+void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role,int &log)
 {
 	string roles1;
 	string roles2;
@@ -184,6 +184,7 @@ void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role)
 		student *pS=pHead_s;
 		cout<< "Press 1: Log in"<<endl;
 		cout<< "Press 2: Sign up"<<endl;
+		cout<< "Press 0: Exit..."<<endl;
 		cout<< "I choose: ";
 		cin>>choose;
 		switch (choose)
@@ -372,8 +373,13 @@ void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role)
 				}
 			}
 		}
-	}while(granted!=1) ;
-
+	}while(granted!=1 and choose!=0) ;
+	if(choose==0)
+	{
+		log=0;
+		return;
+	}
+	
 	if(roles1.compare("teacher")==0){*role=1;}
 	if(roles1.compare("student")==0){*role=0;}
 	}
