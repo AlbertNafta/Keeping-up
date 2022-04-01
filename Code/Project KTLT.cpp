@@ -45,11 +45,12 @@ void OutputUser(student *&pHead_s);
 void removeStudentFromClass(classes *&pHead_c,student *&pHead_s);
 void viewClass(classes *&pHead_c,student *&pHead_s);
 void viewYourclass(classes *&pHead_c,student *&pHead_s,string use);
-void menuStudent(classes *&pHead_c,student *&pHead_s,string *use,int &courseAllow);
+void menuStudent(classes *&pHead_c,student *&pHead_s,string *use,int &courseAllow,courses *&head);
 void viewStudentPro(student *&pHead_s,string uses);
 void inputCourse(courses *&head,int &courseAllow);
 void createCourse(courses *&head);
 void viewCourses(courses *&head,student *&pHead_s);
+void courseRegistration(courses *&head,string here,student *&pHead_s);
 
 
 int main()//this is just a test
@@ -75,10 +76,10 @@ int main()//this is just a test
 	}	
 	if(roles==0)
 	{
-	 menuStudent(pHead_c,pHead_s,&use,courseAllow);
-
+	 menuStudent(pHead_c,pHead_s,&use,courseAllow,head);
+	
 	}
-
+	outputCourse(head,courseAllow);
 //delete []pHead_s;
 //delete []pHead_t;
 	return 0;
