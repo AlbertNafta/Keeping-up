@@ -122,14 +122,79 @@ void viewStudentPro(student *&pHead_s,string uses)
 	_getch();
 }
 
-void menuStudent(classes *&pHead_c,student *&pHead_s,string *use,int &courseAllow){
+void courseRegistration(courses *&head,string here,student *&pHead_s)
+{
+	courses *pc=head;
+	student *pT2=pHead_s;
+	int line,want,no=0;
+	do{
+		no=0;
+					pc=head;
+					line=1;
+					while(pc!=NULL)
+					{
+						cout<<line<<":"<<endl;
+						cout<<"Name: "<<pc->name<<endl;
+							cout<<"Course ID: "<<pc->ID<<endl;
+							cout<<"Number of credits: "<<pc->credits<<endl;
+							cout<<"Taught by: "<<pc->teacher<<endl<<endl;
+							cout<<"Number of student: "<<pc->numberStu<<endl;
+
+							pc=pc->jump;
+							cout<<"_____________________________"<<endl;
+							line++;
+					}
+					cout<<"Press 0 to exit"<<endl;
+					cout<<"What course you want to sign up ? (1 to "<<line-1<<") "<<endl;
+					cout<<"I want course number ";
+					cin>>want;
+					if(want!=0)
+					{
+						pc=head;
+						for(int a=1;a<want;a++)
+						{
+							pc=pc->jump;
+						}
+						
+//------------------------------------------student matching
+					pT2=pHead_s;
+					while(pT2!=NULL)
+					{
+						if(pT2->userName.compare(here)==0)
+						{
+							break;
+						}
+						pT2=pT2->pNext;
+					}
+//----------------------------------------
+					for(int a=0;a<pc->numberStu;a++){
+					if(pc->StuID[a]==pT2->social_ID)
+					{
+						system("cls");
+						cout<<"You already in class !!!";
+						sleep(1);
+						no=1;
+					}
+					}
+					if(no==1)continue;
+						pc->numberStu+=1;
+						pc->StuID[pc->numberStu-1]=pT2->social_ID;
+					}
+					system("cls");
+					cout<<"DONE !!!";
+					sleep(1);
+					system("cls");
+	}while(want!=0);
+}
+
+void menuStudent(classes *&pHead_c,student *&pHead_s,string *use,int &courseAllow,courses *&head){
 
 int choose,choose2;
 string here=*use;
 	do{
 		cout<<"Press 1: View your class"<<endl;
 		cout<<"Press 2: View profile"<<endl;
-		cout<<"Press 3: Course sign up... "<<endl;
+		cout<<"Press 3: Course registration... "<<endl;
 		cout<<"Press 4: ??? "<<endl;
 		cout<<"Press 5: Exit"<<endl;
 		cout<<"I choose: ";
@@ -147,11 +212,16 @@ string here=*use;
 				viewStudentPro(pHead_s,here);
 				system("cls");
 				break;				
-			case 3:{//this is not done yet
+			case 3:{
+				system("cls");
 				if(courseAllow==1)
 				{
-					cout<<"OK...";
-					getch();
+					courseRegistration(head,here,pHead_s);
+				}
+				if(courseAllow==0)
+				{
+					cout<<"Not availble !!!";
+					sleep(1);
 				}
 				system("cls");
 				break;
