@@ -50,6 +50,14 @@ struct classes{
 	classes *pDoor;
 };
 
+struct score{
+	string stuName;
+	int subject; //number of courses that student learn
+	int final[20][2];//contain courses's ID;
+						//contain final point
+	score *paper;
+};
+
 void createClass(classes *&pHead_c)
 {
 	system("cls");
@@ -530,7 +538,78 @@ void createCourse(courses *&head)
 
 }
 
-void MenuTeacher(staff *&pHead_t,student *&pHead_s,string *use,classes *&pHead_c,courses *&head,int &courseAllow)
+void createScore(score *&sco,courses *&head)
+{
+		system("cls");
+		int ok=1;
+	cout<<"This work only for input CSV"<<endl;
+	score *pC=sco;
+	cout<<"Enter file name: ";
+	char fname[1024];
+	scanf ("%s", fname);
+	FILE *file = fopen(fname, "r");
+	string coName;
+	int coID;
+	char content[1024];
+	while(fgets(content, 1024, file))
+	{
+		char *v = strtok(content, ",");
+		while(v and ok==1)
+			{
+			
+					if(ok==1)
+			{
+
+			coName=v;
+			ok=0;	
+			}
+			courses *co=head;
+			v = strtok(NULL, ",");
+			while(co!=NULL)
+			{
+				if(co->name.compare(coName)==0)
+				{
+					coId=co->ID;
+				}
+				co=co->jump;
+			}
+			}
+		while(v)
+		{
+			pC=sco;
+			while(pC!=NULL)
+			{
+				if(pC->stuName.compare(v)==0)break;
+				if(pC->paper==NULL)
+				{
+					pC->paper=new score;
+					pC=pC->paper;
+					break;
+				}
+				pC=pC->paper;
+			}
+			pC->stuName=v;
+			v = strtok(NULL, ",");
+			pC->subject+=1;
+			pC->final[pC->subject-1][0]=coID;
+			pC->final[pC->stuName][1]=atoi(v);
+			v = strtok(NULL, ",");
+
+		}
+		pC->pDoor=new classes;
+		pC=pC->pDoor;
+	}
+	pC=sco;
+	while(pC->paper->paper!=NULL)
+	{
+		pC=pC->paper;
+	}
+	score *pDel=pC->paper;
+	pC->paper=NULL;
+	delete pDel;
+	fclose(file);
+}
+void MenuTeacher(score *&sco,staff *&pHead_t,student *&pHead_s,string *use,classes *&pHead_c,courses *&head,int &courseAllow)
 {
 	int choose,choose2;
 	string here=*use;
@@ -586,7 +665,8 @@ void MenuTeacher(staff *&pHead_t,student *&pHead_s,string *use,classes *&pHead_c
 				cout<<"Press 1: Create courses"<<endl;
 				cout<<"Press 2: View course"<<endl;
 				cout<<"Press 3: Course Registration "<<endl;
-				cout<<"Press 4: Exit"<<endl;
+				cout<<"Press 4: Input final mark via files "<<endl;
+				cout<<"Press 5: Exit"<<endl;
 				cout<<"I choose: ";
 				cin>>choose3;
 				switch(choose3)
@@ -623,8 +703,13 @@ void MenuTeacher(staff *&pHead_t,student *&pHead_s,string *use,classes *&pHead_c
 						system("cls");
 						break;
 					}
+					case 4:{
+						system("cls");
+						
+						break;
+					}
 				}
-				}while(choose3!=4);
+				}while(choose3!=5);
 				system("cls");
 				break;
 			}
