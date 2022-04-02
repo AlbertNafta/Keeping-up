@@ -569,7 +569,7 @@ void createScore(score *&sco,courses *&head)
 			{
 				if(co->name.compare(coName)==0)
 				{
-					coId=co->ID;
+					coID=co->ID;
 				}
 				co=co->jump;
 			}
@@ -584,6 +584,7 @@ void createScore(score *&sco,courses *&head)
 				{
 					pC->paper=new score;
 					pC=pC->paper;
+					pC->paper=NULL;
 					break;
 				}
 				pC=pC->paper;
@@ -592,12 +593,11 @@ void createScore(score *&sco,courses *&head)
 			v = strtok(NULL, ",");
 			pC->subject+=1;
 			pC->final[pC->subject-1][0]=coID;
-			pC->final[pC->stuName][1]=atoi(v);
+			pC->final[pC->subject-1][1]=atoi(v);
 			v = strtok(NULL, ",");
 
 		}
-		pC->pDoor=new classes;
-		pC=pC->pDoor;
+
 	}
 	pC=sco;
 	while(pC->paper->paper!=NULL)
@@ -705,7 +705,7 @@ void MenuTeacher(score *&sco,staff *&pHead_t,student *&pHead_s,string *use,class
 					}
 					case 4:{
 						system("cls");
-						
+						createScore(sco,head);
 						break;
 					}
 				}
