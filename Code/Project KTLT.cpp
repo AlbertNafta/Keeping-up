@@ -19,12 +19,7 @@
 
 using namespace std;
 
-struct score{
-	string stuName;
-	int subject; //number of courses that student learn
-	int final[20][2];//contain courses's ID;
-			//contain final point
-};
+
 
 
 
@@ -45,12 +40,13 @@ void OutputUser(student *&pHead_s);
 void removeStudentFromClass(classes *&pHead_c,student *&pHead_s);
 void viewClass(classes *&pHead_c,student *&pHead_s);
 void viewYourclass(classes *&pHead_c,student *&pHead_s,string use);
-void menuStudent(classes *&pHead_c,student *&pHead_s,string *use,int &courseAllow,courses *&head);
+void MenuTeacher(score *&sco,staff *&pHead_t,student *&pHead_s,string *use,classes *&pHead_c,courses *&head,int &courseAllow);
 void viewStudentPro(student *&pHead_s,string uses);
 void inputCourse(courses *&head,int &courseAllow);
 void createCourse(courses *&head);
 void viewCourses(courses *&head,student *&pHead_s);
 void courseRegistration(courses *&head,string here,student *&pHead_s);
+void createScore(score *&sco,courses *&head);
 
 
 int main()//this is just a test
@@ -59,6 +55,7 @@ int main()//this is just a test
 	student *pS=pHead_s;
 	staff *pHead_t=new staff;
 	staff *pT=pHead_t;
+	score *sco=new score;
 	inputUserProfile(pHead_s);
 	inputTeacherProfile(pHead_t);
 	classes *pHead_c = new classes;
@@ -68,12 +65,14 @@ int main()//this is just a test
 	inputCourse(head,courseAllow);
 	int roles=-1,log=1;
 	string use;//to know who is login
+	
 	do{
+	system("cls");
 	logIn(pHead_s,pHead_t,&use,&roles,log);
 	if(log==0)break;
 	if (roles==1)
 	{
-		MenuTeacher(pHead_t,pHead_s,&use,pHead_c,head,courseAllow);
+		MenuTeacher(sco,pHead_t,pHead_s,&use,pHead_c,head,courseAllow);
 	}	
 	if(roles==0)
 	{
@@ -81,9 +80,9 @@ int main()//this is just a test
 		outputCourse(head,courseAllow);
 	}
 	}while(log==1);
-delete []pHead_s;
-delete []pHead_t;
-delete[]head;
+//delete []pHead_s;
+//delete []pHead_t;
+//delete[]head;
 	return 0;
 }
 
