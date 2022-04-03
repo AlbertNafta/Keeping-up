@@ -513,6 +513,42 @@ void outputCourse(courses *&head,int &courseAllow)
 	}
 }
 
+void inputScore(score *&sco)
+{
+	score *pC=sco;
+	FILE *file = fopen("FinalMark.CSV", "r");
+	char content[1024];
+	while(fgets(content, 1024, file))
+	{
+		char *v = strtok(content, ",");
+		while(v)
+		{
+			pC->stuName=v;
+			v = strtok(NULL, ",");
+			pC->subject=atoi(v);
+			v = strtok(NULL, ",");
+			for(int a=0;a<pC->subject;a++)
+			{
+				pC->final[a][0]=atoi(v);
+				v = strtok(NULL, ",");
+				pC->final[a][1]=atoi(v);
+				v = strtok(NULL, ",");
+			}
+		}
+		pC->paper=new score;
+		pC=pC->paper;
+	}
+	pC=sco;
+	while(pC->paper->paper!=NULL)
+	{
+		pC=pC->paper;
+	}
+	score *pDel=pC->paper;
+	pC->paper=NULL;
+	delete pDel;
+	fclose(file);
+}
+
 
 void createCourse(courses *&head)
 {
@@ -542,14 +578,16 @@ void createScore(score *&sco,courses *&head)
 {
 		system("cls");
 		int ok=1;
+		int first=1,count=0;
 	cout<<"This work only for input CSV"<<endl;
 	score *pC=sco;
 	cout<<"Enter file name: ";
 	char fname[1024];
 	scanf ("%s", fname);
 	FILE *file = fopen(fname, "r");
-	string coName;
+	int coName;
 	int coID;
+	score *here;
 	char content[1024];
 	while(fgets(content, 1024, file))
 	{
@@ -557,40 +595,58 @@ void createScore(score *&sco,courses *&head)
 		while(v and ok==1)
 			{
 			
-					if(ok==1)
-			{
-
-			coName=v;
-			ok=0;	
-			}
-			courses *co=head;
-			v = strtok(NULL, ",");
-			while(co!=NULL)
-			{
-				if(co->name.compare(coName)==0)
+			if(ok==1)
 				{
-					coID=co->ID;
+	
+				coName=atoi(v);
+				
+				ok=0;	
+				}
+			courses *co=head;
+				while(co!=NULL)
+			{
+	
+				if(co->ID==coName)
+				{
+					coID=co->ID;break;
 				}
 				co=co->jump;
 			}
+			v = strtok(NULL, ",");
+
 			}
 		while(v)
 		{
+			int create=0;
 			pC=sco;
+			string perName=v;
+			
+			cout<<perName<<endl;
+			getch();
 			while(pC!=NULL)
 			{
-				if(pC->stuName.compare(v)==0)break;
+				
+				if(pC->stuName.compare(perName)==0)break;
 				if(pC->paper==NULL)
 				{
+
+					
+					
 					pC->paper=new score;
 					pC=pC->paper;
 					pC->paper=NULL;
+					
+					create=1;
 					break;
 				}
+				
 				pC=pC->paper;
 			}
-			pC->stuName=v;
+
+			pC->stuName=perName;
 			v = strtok(NULL, ",");
+			if(create==1)
+			pC->subject=0;
 			pC->subject+=1;
 			pC->final[pC->subject-1][0]=coID;
 			pC->final[pC->subject-1][1]=atoi(v);
@@ -599,16 +655,66 @@ void createScore(score *&sco,courses *&head)
 		}
 
 	}
-	pC=sco;
-	while(pC->paper->paper!=NULL)
-	{
-		pC=pC->paper;
-	}
-	score *pDel=pC->paper;
 	pC->paper=NULL;
-	delete pDel;
 	fclose(file);
 }
+
+void viewScore(score *&sco,courses *&head)
+{
+	score *pc=sco;
+						courses *ps=head;
+						while(pc!=NULL)
+						{
+							cout<<"Name: "<<pc->stuName<<endl;
+							
+							for(int z=0;z<pc->subject;z++)
+							{
+								cout<<z+1<<".|";
+								ps=head;
+								while(ps!=NULL)
+								{
+									if(ps->ID==pc->final[z][0])
+									{
+										break;
+									}
+									ps=ps->jump;
+								}
+								cout<<ps->name<<": "<<pc->final[z][1]<<endl;
+							}
+							pc=pc->paper;
+							cout<<endl;
+						}
+						cout<<"Press any key to back..."<<endl;
+						_getch();
+}
+
+void outputScore(score *&sco)
+{
+		fstream fout;
+  
+    // opens an existing csv file or creates a new file.
+    fout.open("FinalMark.CSV", ios::out );
+
+  	score *pC=sco;
+    // Read the input
+    while(pC!=NULL) 
+	{
+		if(pC!=sco)fout<<endl;
+		
+        fout <<pC->stuName<<","
+			<<pC->subject<<",";
+		for(int a=0;a<pC->subject;a++)
+		{
+			fout<<pC->final[a][0];
+			fout<<",";
+			fout<<pC->final[a][1];
+			if(a<pC->subject-1)fout<<",";
+		}
+
+	pC=pC->paper;
+	}
+}
+
 void MenuTeacher(score *&sco,staff *&pHead_t,student *&pHead_s,string *use,classes *&pHead_c,courses *&head,int &courseAllow)
 {
 	int choose,choose2;
@@ -618,8 +724,9 @@ void MenuTeacher(score *&sco,staff *&pHead_t,student *&pHead_s,string *use,class
 		cout<<"Press 1: Manage class"<<endl;
 		cout<<"Press 2: Manage courses"<<endl;
 		cout<<"Press 3: Create school year ? "<<endl;
-		cout<<"Press 4: View profile "<<endl;
-		cout<<"Press 5: Exit"<<endl;
+		cout<<"Press 4: Manage student's score"<<endl;
+		cout<<"Press 5: View profile "<<endl;
+		cout<<"Press 6: Exit"<<endl;
 		cout<<"I choose: ";
 		cin>>choose;
 		choose2=0;
@@ -665,8 +772,8 @@ void MenuTeacher(score *&sco,staff *&pHead_t,student *&pHead_s,string *use,class
 				cout<<"Press 1: Create courses"<<endl;
 				cout<<"Press 2: View course"<<endl;
 				cout<<"Press 3: Course Registration "<<endl;
-				cout<<"Press 4: Input final mark via files "<<endl;
-				cout<<"Press 5: Exit"<<endl;
+				
+				cout<<"Press 4: Exit"<<endl;
 				cout<<"I choose: ";
 				cin>>choose3;
 				switch(choose3)
@@ -703,13 +810,9 @@ void MenuTeacher(score *&sco,staff *&pHead_t,student *&pHead_s,string *use,class
 						system("cls");
 						break;
 					}
-					case 4:{
-						system("cls");
-						createScore(sco,head);
-						break;
-					}
+
 				}
-				}while(choose3!=5);
+				}while(choose3!=4);
 				system("cls");
 				break;
 			}
@@ -718,8 +821,38 @@ void MenuTeacher(score *&sco,staff *&pHead_t,student *&pHead_s,string *use,class
 				system("cls");
 				break;
 			}
+			case 4:{
+				system("cls");
+				int pick;
+				do{
+				cout<<"Press 1: Input score"<<endl;
+				cout<<"Press 2: View score"<<endl;
+				cout<<"Press 3: Exit"<<endl;
+				cout<<"I choose ";
+				cin>>pick;
+				switch(pick)
+				{
+					case 1:{
+						system("cls");
+						createScore(sco,head);
+						outputScore(sco);
+						system("cls");
+						cout<<"DONE !!!";
+						sleep(1);
+						system("cls");
+						break;
+					}
+					case 2:{
+						viewScore(sco,head);
+						outputScore(sco);
+						system("cls");
+						break;
+					}
+				}			
+				}while(pick!=3);system("cls");break;
+					}
 			
-			case 4:
+			case 5:
 			{
 			viewTeacherPro(pHead_t,here);
 			system("cls");
@@ -729,5 +862,5 @@ void MenuTeacher(score *&sco,staff *&pHead_t,student *&pHead_s,string *use,class
 		}
 	
 		
-	}while(choose!=5);
+	}while(choose!=6);
 }
