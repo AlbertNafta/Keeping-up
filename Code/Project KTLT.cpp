@@ -47,7 +47,9 @@ void createCourse(courses *&head);
 void viewCourses(courses *&head,student *&pHead_s);
 void courseRegistration(courses *&head,string here,student *&pHead_s);
 void createScore(score *&sco,courses *&head);
-
+void inputScore(score *&sco);
+void viewScore(score *&sco,courses *&head);
+void outputScore(score *&sco);
 
 int main()//this is just a test
 {
@@ -63,6 +65,7 @@ int main()//this is just a test
 	inputClasses(pHead_c);
 	int courseAllow=-1;
 	inputCourse(head,courseAllow);
+	inputScore(sco);
 	int roles=-1,log=1;
 	string use;//to know who is login
 	
@@ -85,4 +88,5 @@ int main()//this is just a test
 //delete[]head;
 	return 0;
 }
+
 
