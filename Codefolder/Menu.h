@@ -155,6 +155,11 @@ void addStudentToClass(classes *&pHead_c,student *&pHead_s)
 		_getch();
 }
 
+void gotoxny(int x, int y) {
+	COORD pos = { x,y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
 void removeStudentFromClass(classes *&pHead_c,student *&pHead_s)
 {
 	string className;
@@ -384,7 +389,7 @@ void viewTeacherPro(staff *&pHead_t,string uses)
 }
 
 void inputCourse(courses *&head,int &courseAllow,timeTable &time)
-{
+{ 
 		courses *pC=head;
 		int ok=1;
 	FILE *file = fopen("Courses.CSV", "r");
@@ -428,7 +433,6 @@ void inputCourse(courses *&head,int &courseAllow,timeTable &time)
 			v = strtok(NULL, ",");
 			pC->nums=atoi(v);
 			v = strtok(NULL, ",");
-			cout<<"ok";
 			for(int i=0;i<=1;i++){
 			int day=atoi(v);	
 			v = strtok(NULL, ",");
@@ -522,6 +526,7 @@ void outputCourse(courses *&head,int &courseAllow,timeTable &time)
 			{
 				if(time.week[z][x]==pC->ID)
 				{
+					cout<<"found ";
 					fout<<","<<x+2<<","<<z+1;
 				}
 			}
@@ -739,18 +744,53 @@ void outputScore(score *&sco)
 	pC=pC->paper;
 	}
 }
-void viewTime(timeTable &time){
-		for(int x=0;x<7;x++) 
+void viewTime(timeTable &time,courses *&head){
+	courses *pc=head;
+	gotoxny(6,0);
+	cout<<"Monday |";
+	gotoxny(16,0);
+	cout<<"Tuesday |";
+	gotoxny(26,0);
+	cout<<"Wednesday |";
+	gotoxny(36,0);
+	cout<<"Thursday |";
+	gotoxny(46,0);
+	cout<<"Friday |";
+	gotoxny(56,0);
+	cout<<"Saturday |";
+	gotoxny(66,0);
+	cout<<"Sunday ";
+	gotoxny(0,2);
+	cout<<"S1 |";
+	gotoxny(0,4);
+	cout<<"S2 |";
+	gotoxny(0,6);
+	cout<<"S3 |";
+	gotoxny(0,8);
+	cout<<"S4 |";
+		for(int x=0;x<4;x++) 
 		{
-			for(int z=0;z<4;z++)
+			for(int z=0;z<7;z++)
 			{
-				cout<<time.week[z][x]<<" ";
+				gotoxny(6+10*z,2*x+2);
+				if(time.week[x][z]!=0)
+				{
+					pc=head;
+					while(pc!=NULL)
+					{
+						if(pc->ID==time.week[x][z])break;
+						pc=pc->jump;
+					}
+					cout<<pc->name<<" ";
+				}
+				else cout<<"0";
+				
 			}
 			cout<<endl;
 		}
 }
 
-void deleteCourse(courses *&head,timeTable time)
+void deleteCourse(courses *&head,timeTable &time)
 {
 	courses *pC=head;
 	int fou=0;
@@ -903,7 +943,7 @@ void MenuTeacher(score *&sco,staff *&pHead_t,student *&pHead_s,string *use,class
 					case 4:			
 					{
 				system("cls");
-				viewTime(time);
+				viewTime(time,head);
 				getch();
 				system("cls");
 				break;

@@ -76,7 +76,16 @@ void Display()
 	drawF(2, 20, 85, 27);
 
 	drawF(38, 170, 0, 0);
-
+		int i=2;
+		gotoxy(62,20);
+	while(i!=0)
+	{
+		char move;
+		move=_getch();
+		if(move=='s')gotoxy(62,21);
+		if(move=='w')gotoxy(62,19);
+		
+	}
 }
 void drawF(int col, int row, int x, int y) {
 	gotoxy(x, y); cout << char(201);
@@ -97,6 +106,7 @@ void drawF(int col, int row, int x, int y) {
 	for (int i = x + 1; i < x + row; i++)
 		cout << char(205);
 	cout << char(188);
+
 }
 void gotoxy(int x, int y) {
 	COORD pos = { x,y };

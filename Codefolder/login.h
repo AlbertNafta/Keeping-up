@@ -12,9 +12,17 @@
 #include<unistd.h>
 #include<bits/stdc++.h>
 #include<conio.h>
-
-
 using namespace std;
+void txtColor(int color);
+void gotoxy(int x, int y);
+void drawF(int col, int row, int x, int y);
+void DisplayGeneral(int &r);
+void DisplayLogin(string *roles);
+void DisplayUser(string *roles,string *userName );
+void DisplayNotFound(string *roles,string *userName );
+void DisplayTypePass(string *userName,string *passWord );
+void DisplayTypeWrongPass(string *userName,string *passWord );
+
 
 struct student{
 	string userName;
@@ -175,30 +183,27 @@ void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role,int &log)
 {
 	string roles1;
 	string roles2;
-
+	int r;
 	int choose=0,granted=0;
 	
 	string userName;	
 	do{
 		staff *pT=pHead_t;
 		student *pS=pHead_s;
-		cout<< "Press 1: Log in"<<endl;
-		cout<< "Press 2: Sign up"<<endl;
-		cout<< "Press 0: Exit..."<<endl;
-		cout<< "I choose: ";
-		cin>>choose;
+		DisplayGeneral(r);
+		if(r==24)choose=2;
+		if(r==20)choose=1;
+		if(r==28)choose=0;
 		switch (choose)
 		{
 			case 1:
 				{
-					cout<<"You are teacher or student ?"<<endl;
-					cout<<"I am ";
-					cin>>roles1;
+					system("cls");
+					DisplayLogin(&roles1);
 					system("cls");
 					if(roles1.compare("teacher")==0){
-					cout<< "Type ""/esc"" to back "<<endl;
-					cout<<"Enter username: ";
-					cin>>userName;
+						DisplayUser(&roles1,&userName);//----------------------------------------
+					
 					while(pT->userName.compare(userName)!=0){
 						if(userName.compare("/esc")==0)break;
 
@@ -206,8 +211,7 @@ void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role,int &log)
 						if(pT==NULL)
 						{
 							system("cls");
-							cout<<"Not found! Type again: ";
-							cin>>userName;
+							DisplayNotFound(&roles1,&userName);
 							pT=pHead_t;	
 						}
 						
@@ -218,35 +222,33 @@ void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role,int &log)
 						break;
 					}
 					system("cls");
-					cout<<"Username: "<<pT->userName<<endl;
-					cout<<"Type password: ";
 					string passWord;
-					cin>>passWord;
+					
+					DisplayTypePass(&userName,&passWord );
 					while(pT->passWord.compare(passWord)!=0){
 							system("cls");
-							cout<<"Username: "<<pT->userName<<endl;
-							cout<<"Wrong! Type again: ";
-							cin>>passWord;
+							DisplayTypeWrongPass(&userName,&passWord );
 					}
-					cout<<"Access granted !"<<endl;
+					system("cls");
+					cout<<"ACCESS GRANTED !"<<endl;
+					sleep(1);
 					*use=pT->userName;
 					granted=1;
+					system("cls");
+					txtColor(7);
 					break;
 				}
 				if(roles1.compare("student")==0)
 				{
-					system("cls");
-					cout<< "Type ""/esc"" to back "<<endl;
-					cout<<"Enter username: ";
-					cin>>userName;
+					DisplayUser(&roles1,&userName);//----------------------------------------
+					
 					while(pS->userName.compare(userName)!=0){
 						if(userName.compare("/esc")==0)break;
 						pS=pS->pNext;
 						if(pS==NULL)
 						{
 							system("cls");
-							cout<<"Not found! Type again: ";
-							cin>>userName;
+							DisplayNotFound(&roles1,&userName);
 							pS=pHead_s;	
 						}
 						
@@ -257,19 +259,20 @@ void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role,int &log)
 						break;
 					}
 					system("cls");
-					cout<<"Username: "<<pS->userName<<endl;
-					cout<<"Type password: ";
 					string passWord;
-					cin>>passWord;
+					DisplayTypePass(&userName,&passWord );
 					while(pS->passWord.compare(passWord)!=0){
 							system("cls");
-							cout<<"Username: "<<pS->userName<<endl;
-							cout<<"Wrong! Type again: ";
-							cin>>passWord;
+							DisplayTypeWrongPass(&userName,&passWord );
 					}
-					cout<<"Access granted !"<<endl;
+					system("cls");
+					cout<<"ACCESS GRANTED !"<<endl;
+					sleep(1);
 					*use=pS->userName;
-					granted=1;break;
+					granted=1;
+					system("cls");
+					txtColor(7);
+					break;
 				}
 				}
 			case 2:
@@ -384,5 +387,413 @@ void logIn(student *&pHead_s,staff *&pHead_t,string *use,int *role,int &log)
 	if(roles1.compare("student")==0){*role=0;}
 	}
 
+void DisplayGeneral(int &r)
+{
+	txtColor(11);
+	gotoxy(60, 1);
+	cout << "  8888888b.                   888             888 ";
+	gotoxy(60, 2);
+	cout << "  888   Y88b                  888             888 ";
+	txtColor(3);
+	gotoxy(60, 3);
+	cout << "  888    888                  888             888 ";
+	gotoxy(60, 4);
+	cout << "  888   d88P  .d88b.  888d888 888888  8888b.  888 ";
+	gotoxy(60, 5);
+	cout << "  8888888P\"  d88\"\"88b 888P\"   888        \"88b 888 ";
+	txtColor(1);
+	gotoxy(60, 6);
+	cout << "  888        888  888 888     888    .d888888 888 ";
+	gotoxy(60, 7);
+	cout << "  888        Y88..88P 888     Y88b.  888  888 888 ";
+	gotoxy(60, 8);
+	cout << "  888         \"Y88P\"  888      \"Y888 \"Y888888 888 ";
+	gotoxy(60, 9);
+	cout << "                                                  ";  
 
+	txtColor(15);
+	gotoxy(77, 13);
+	cout<<"PRESS / TO CHOOSE ";
+	gotoxy(72, 14);
+	cout<<"Press w or s to go up or down";
+	
+//--right here
+	drawF(6,35, 68, 10);
+	
+	txtColor(11);
+	gotoxy(78, 20);
+	cout << "Log in: ";
+	gotoxy(78, 24);
+	cout << "Sign up: ";
+	txtColor(11);
+	drawF(2, 13, 75, 19);
+	drawF(2, 13, 75, 23);
+	
+	txtColor(7);
+	drawF(2, 2, 75+16, 19);
+	drawF(2, 2, 75+16, 23);
+	gotoxy(70, 28);
+	
+	gotoxy(78, 28);
+	txtColor(11);
+	cout << "Exit... ";
+	drawF(2, 13, 75, 27);
+	txtColor(7);
+	drawF(2, 2, 75+16, 27);
+	
+		int i=2;
+	r=24;
+		gotoxy(92,r);
+	while(i!=0)
+	{
+		char move;
+		move=_getch();
+		if(move=='s'){r+=4;if(r>28)r=28;gotoxy(92,r);}
+		if(move=='w'){r-=4;if(r<20)r=20;gotoxy(92,r);}
+		if(move=='/'){return;}
+	}
+}
+void drawF(int col, int row, int x, int y) {
+	gotoxy(x, y); cout << char(201);
+	for (int i = x + 1; i < x + row ; i++)
+		cout << char(205);
+	cout << char(187);
+	//gotoxy(x + row, y); cout << char(187);
+	//gotoxy(x, y + col); cout << char(200);
+	
+	for (int i = y + 1; i < y + col; i++) {
+		gotoxy(x, i);
+		cout << char(186);
+		gotoxy(x + row, i);
+		cout << char(186);
+	}
+	gotoxy(x, y + col);
+	cout << char(200);
+	for (int i = x + 1; i < x + row; i++)
+		cout << char(205);
+	cout << char(188);
 
+}
+void gotoxy(int x, int y) {
+	COORD pos = { x,y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+//color
+void txtColor(int color)
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+void DisplayLogin(string *roles)
+{
+	txtColor(11);
+	gotoxy(60, 1);
+	cout << "  8888888b.                   888             888 ";
+	gotoxy(60, 2);
+	cout << "  888   Y88b                  888             888 ";
+	txtColor(3);
+	gotoxy(60, 3);
+	cout << "  888    888                  888             888 ";
+	gotoxy(60, 4);
+	cout << "  888   d88P  .d88b.  888d888 888888  8888b.  888 ";
+	gotoxy(60, 5);
+	cout << "  8888888P\"  d88\"\"88b 888P\"   888        \"88b 888 ";
+	txtColor(1);
+	gotoxy(60, 6);
+	cout << "  888        888  888 888     888    .d888888 888 ";
+	gotoxy(60, 7);
+	cout << "  888        Y88..88P 888     Y88b.  888  888 888 ";
+	gotoxy(60, 8);
+	cout << "  888         \"Y88P\"  888      \"Y888 \"Y888888 888 ";
+	gotoxy(60, 9);
+	cout << "                                                  ";  
+
+	txtColor(15);
+	gotoxy(70, 10);
+	cout << "     __             _       ";
+	gotoxy(70, 11);
+	cout << "    / /  ___   __ _(_)_ __  ";
+	gotoxy(70, 12);
+	cout << "   / /  / _ \\ / _` | | '_ \\ ";
+	gotoxy(70, 13);
+	cout << "  / /__| (_) | (_| | | | | |";
+	gotoxy(70, 14);
+	cout << "  \\____/\\___/ \\__, |_|_| |_|";
+	gotoxy(70, 15);
+	cout << "              |___/         ";
+
+//--right here
+	drawF(6,35, 68, 10);
+	
+	txtColor(11);
+	gotoxy(72, 20);
+	cout<<"You are teacher or student ?";
+	gotoxy(72, 24);
+	cout << "I am the : ";
+	txtColor(11);
+	drawF(2, 32, 69, 19);
+	drawF(2, 32, 69, 23);
+	
+	txtColor(7);
+	gotoxy(83,24);
+	string in;
+	cin>>in;
+	*roles=in;
+	
+}
+
+void DisplayUser(string *roles,string *userName )
+{
+	txtColor(11);
+	gotoxy(60, 1);
+	cout << "  8888888b.                   888             888 ";
+	gotoxy(60, 2);
+	cout << "  888   Y88b                  888             888 ";
+	txtColor(3);
+	gotoxy(60, 3);
+	cout << "  888    888                  888             888 ";
+	gotoxy(60, 4);
+	cout << "  888   d88P  .d88b.  888d888 888888  8888b.  888 ";
+	gotoxy(60, 5);
+	cout << "  8888888P\"  d88\"\"88b 888P\"   888        \"88b 888 ";
+	txtColor(1);
+	gotoxy(60, 6);
+	cout << "  888        888  888 888     888    .d888888 888 ";
+	gotoxy(60, 7);
+	cout << "  888        Y88..88P 888     Y88b.  888  888 888 ";
+	gotoxy(60, 8);
+	cout << "  888         \"Y88P\"  888      \"Y888 \"Y888888 888 ";
+	gotoxy(60, 9);
+	cout << "                                                  ";  
+
+	txtColor(15);
+	gotoxy(70, 10);
+	cout << "     __             _       ";
+	gotoxy(70, 11);
+	cout << "    / /  ___   __ _(_)_ __  ";
+	gotoxy(70, 12);
+	cout << "   / /  / _ \\ / _` | | '_ \\ ";
+	gotoxy(70, 13);
+	cout << "  / /__| (_) | (_| | | | | |";
+	gotoxy(70, 14);
+	cout << "  \\____/\\___/ \\__, |_|_| |_|";
+	gotoxy(70, 15);
+	cout << "              |___/         ";
+
+//--right here
+	drawF(6,35, 68, 10);
+	
+	txtColor(11);
+	gotoxy(62, 24);
+	cout << "Username: ";
+	txtColor(11);
+	drawF(2, 13, 59, 23);
+	
+	txtColor(7);
+	drawF(2, 41, 65, 19);
+	gotoxy(66,20);
+	cout<<"! You are currently sign in as "<<*roles<<" !";
+	drawF(2, 37, 75, 23);
+	gotoxy(70, 28);
+	cout << "Press /esc to back to menu... ";
+	
+
+	
+	string innn;
+		gotoxy(77,24);
+	cin>>innn;
+	*userName=innn;
+}
+
+void DisplayNotFound(string *roles,string *userName )
+{
+	txtColor(11);
+	gotoxy(60, 1);
+	cout << "  8888888b.                   888             888 ";
+	gotoxy(60, 2);
+	cout << "  888   Y88b                  888             888 ";
+	txtColor(3);
+	gotoxy(60, 3);
+	cout << "  888    888                  888             888 ";
+	gotoxy(60, 4);
+	cout << "  888   d88P  .d88b.  888d888 888888  8888b.  888 ";
+	gotoxy(60, 5);
+	cout << "  8888888P\"  d88\"\"88b 888P\"   888        \"88b 888 ";
+	txtColor(1);
+	gotoxy(60, 6);
+	cout << "  888        888  888 888     888    .d888888 888 ";
+	gotoxy(60, 7);
+	cout << "  888        Y88..88P 888     Y88b.  888  888 888 ";
+	gotoxy(60, 8);
+	cout << "  888         \"Y88P\"  888      \"Y888 \"Y888888 888 ";
+	gotoxy(60, 9);
+	cout << "                                                  ";  
+
+	txtColor(15);
+	gotoxy(70, 10);
+	cout << "     __             _       ";
+	gotoxy(70, 11);
+	cout << "    / /  ___   __ _(_)_ __  ";
+	gotoxy(70, 12);
+	cout << "   / /  / _ \\ / _` | | '_ \\ ";
+	gotoxy(70, 13);
+	cout << "  / /__| (_) | (_| | | | | |";
+	gotoxy(70, 14);
+	cout << "  \\____/\\___/ \\__, |_|_| |_|";
+	gotoxy(70, 15);
+	cout << "              |___/         ";
+
+//--right here
+	drawF(6,35, 68, 10);
+	
+	txtColor(11);
+	gotoxy(62, 24);
+	cout << "Username: ";
+	txtColor(11);
+	drawF(2, 13, 59, 23);
+	
+	txtColor(7);
+	drawF(2, 41, 65, 19);
+	gotoxy(66,20);
+	cout<<"! Cannot found that username, do agian !";
+	drawF(2, 37, 75, 23);
+	gotoxy(70, 28);
+	cout << "Press /esc to back to menu... ";
+	
+
+	
+	string innn;
+		gotoxy(77,24);
+	cin>>innn;
+	*userName=innn;
+}
+
+void DisplayTypePass(string *userName,string *passWord )
+{
+	txtColor(11);
+	gotoxy(60, 1);
+	cout << "  8888888b.                   888             888 ";
+	gotoxy(60, 2);
+	cout << "  888   Y88b                  888             888 ";
+	txtColor(3);
+	gotoxy(60, 3);
+	cout << "  888    888                  888             888 ";
+	gotoxy(60, 4);
+	cout << "  888   d88P  .d88b.  888d888 888888  8888b.  888 ";
+	gotoxy(60, 5);
+	cout << "  8888888P\"  d88\"\"88b 888P\"   888        \"88b 888 ";
+	txtColor(1);
+	gotoxy(60, 6);
+	cout << "  888        888  888 888     888    .d888888 888 ";
+	gotoxy(60, 7);
+	cout << "  888        Y88..88P 888     Y88b.  888  888 888 ";
+	gotoxy(60, 8);
+	cout << "  888         \"Y88P\"  888      \"Y888 \"Y888888 888 ";
+	gotoxy(60, 9);
+	cout << "                                                  ";  
+
+	txtColor(15);
+	gotoxy(70, 10);
+	cout << "     __             _       ";
+	gotoxy(70, 11);
+	cout << "    / /  ___   __ _(_)_ __  ";
+	gotoxy(70, 12);
+	cout << "   / /  / _ \\ / _` | | '_ \\ ";
+	gotoxy(70, 13);
+	cout << "  / /__| (_) | (_| | | | | |";
+	gotoxy(70, 14);
+	cout << "  \\____/\\___/ \\__, |_|_| |_|";
+	gotoxy(70, 15);
+	cout << "              |___/         ";
+
+//--right here
+	drawF(6,35, 68, 10);
+	
+	txtColor(11);
+	gotoxy(62, 24);
+	cout << "Password: ";
+	txtColor(11);
+	drawF(2, 13, 59, 23);
+	
+	txtColor(7);
+	drawF(2, 41, 65, 19);
+	gotoxy(66,20);
+	txtColor(11);
+	cout<<" Username: "<<*userName;
+	drawF(2, 37, 75, 23);
+	gotoxy(70, 28);
+	cout << " ";
+	
+
+	
+	string pass;
+		gotoxy(77,24);
+	cin>>pass;
+	*passWord=pass;
+}
+
+void DisplayTypeWrongPass(string *userName,string *passWord )
+{
+	txtColor(11);
+	gotoxy(60, 1);
+	cout << "  8888888b.                   888             888 ";
+	gotoxy(60, 2);
+	cout << "  888   Y88b                  888             888 ";
+	txtColor(3);
+	gotoxy(60, 3);
+	cout << "  888    888                  888             888 ";
+	gotoxy(60, 4);
+	cout << "  888   d88P  .d88b.  888d888 888888  8888b.  888 ";
+	gotoxy(60, 5);
+	cout << "  8888888P\"  d88\"\"88b 888P\"   888        \"88b 888 ";
+	txtColor(1);
+	gotoxy(60, 6);
+	cout << "  888        888  888 888     888    .d888888 888 ";
+	gotoxy(60, 7);
+	cout << "  888        Y88..88P 888     Y88b.  888  888 888 ";
+	gotoxy(60, 8);
+	cout << "  888         \"Y88P\"  888      \"Y888 \"Y888888 888 ";
+	gotoxy(60, 9);
+	cout << "                                                  ";  
+
+	txtColor(15);
+	gotoxy(70, 10);
+	cout << "     __             _       ";
+	gotoxy(70, 11);
+	cout << "    / /  ___   __ _(_)_ __  ";
+	gotoxy(70, 12);
+	cout << "   / /  / _ \\ / _` | | '_ \\ ";
+	gotoxy(70, 13);
+	cout << "  / /__| (_) | (_| | | | | |";
+	gotoxy(70, 14);
+	cout << "  \\____/\\___/ \\__, |_|_| |_|";
+	gotoxy(70, 15);
+	cout << "              |___/         ";
+
+//--right here
+	drawF(6,35, 68, 10);
+	
+	txtColor(11);
+	gotoxy(62, 24);
+	cout << "Password: ";
+	txtColor(11);
+	drawF(2, 13, 59, 23);
+	
+	txtColor(7);
+	drawF(2, 41, 65, 19);
+	gotoxy(66,20);
+	txtColor(11);
+	cout<<" Username: "<<*userName;
+	drawF(2, 37, 75, 23);
+	gotoxy(70, 28);
+	cout << " ";
+	txtColor(7);
+	gotoxy(67, 28);
+	cout << "Wrong password !!! Please type agian... ";	
+
+	
+	string pass;
+		gotoxy(77,24);
+	cin>>pass;
+	*passWord=pass;
+}

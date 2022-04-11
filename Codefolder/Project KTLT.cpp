@@ -23,7 +23,7 @@ using namespace std;
 
 
 
-
+void gotoxy(int x, int y) ;
 void addStudentToClass(classes *&pHead_c,student *&pHead_s);
 bool checkFileWithFstream(string path);
 void createClass(classes *&pHead_c);
@@ -62,23 +62,24 @@ int main()//this is just a test
 	score *sco=new score;
 	inputUserProfile(pHead_s);
 	inputTeacherProfile(pHead_t);
-	timeTable time;
+		timeTable time;
 	classes *pHead_c = new classes;
 	courses *head = new courses;
 	inputClasses(pHead_c);
 	int courseAllow=-1;
-	inputCourse(head,courseAllow,time);
-	inputScore(sco);
-	int roles=-1,log=1;
-	string use;//to know who is login
-
-			for(int x=0;x<7;x++) //reset timeTable
+				for(int x=0;x<7;x++) //reset timeTable
 		{
 			for(int z=0;z<4;z++)
 			{
 				time.week[z][x]=0;
 			}
 		}
+	inputCourse(head,courseAllow,time);
+	inputScore(sco);
+	int roles=-1,log=1;
+	string use;//to know who is login
+
+
 	do{
 	system("cls");
 	logIn(pHead_s,pHead_t,&use,&roles,log);
